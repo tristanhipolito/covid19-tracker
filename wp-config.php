@@ -74,7 +74,24 @@ if ( ! defined( 'WP_DEBUG' ) ) {
 }
 
 /* That's all, stop editing! Happy Pressing. */
+if (isset($_ENV['PANTHEON_ENVIRONMENT']) && php_sapi_name() != 'cli') {
+  // Redirect to https://$primary_domain in the Live environment
+  if ($_ENV['PANTHEON_ENVIRONMENT'] === 'live') {
+    // Replace www.example.com with your registered domain name.
+    $primary_domain = 'covid19tracker.iamtristan.online';
+  }
+  else {
+    // Redirect to HTTPS on every Pantheon environment.
+    $primary_domain = $_SERVER['HTTP_HOST'];
+  }
 
+  $requires_redirect = false;
+  
+  // Ensure the site is being served from the primary domain.
+  if ($_SERVER['HTTP_HOST'] != $primary_domain) {
+    $requires_redirect = true;
+  }
+}
 
 
 
